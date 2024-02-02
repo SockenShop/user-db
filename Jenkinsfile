@@ -38,6 +38,8 @@ agent any
                 KUBECONFIG = credentials("EKS_CONFIG")  
                 AWSKEY = credentials("AWS_KEY")
                 AWSSECRETKEY = credentials("AWS_SECRET_KEY")
+                EKSCLUSTERNAME = credentials("EKS-CLUSTER")
+                
 
             }
             steps{
@@ -52,7 +54,7 @@ agent any
                 sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
                 sh 'aws configure set region eu-west-3'
                 sh 'aws configure set output text'                
-                sh 'aws eks --region eu-west-3 update-kubeconfig --name sock-shop-9sQCAT9F --kubeconfig .kube/config'
+                sh 'aws eks --region eu-west-3 update-kubeconfig --name $EKSCLUSTERNAME --kubeconfig .kube/config'
                 sh 'aws eks list-clusters'
                 sh 'kubectl config view'
                 sh 'kubectl cluster-info --kubeconfig .kube/config'
