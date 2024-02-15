@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE_USER_DB = "user-db"
         DOCKER_TAG = "${BUILD_ID}"
         BUILD_AGENT  = ""
-        NAMESPACE = "sock-shop"
+        NAMESPACE = credentials("NAMESPACE")
     }
 agent any
     stages {
@@ -38,8 +38,8 @@ agent any
                 KUBECONFIG = credentials("EKS_CONFIG")  
                 AWSKEY = credentials("AWS_KEY")
                 AWSSECRETKEY = credentials("AWS_SECRET_KEY")
-                EKSCLUSTERNAME = credentials("EKS-CLUSTER")
-                
+                AWSREGION = credentials("AWS_REGION")
+                EKSCLUSTERNAME = credentials("EKS_CLUSTER")
 
             }
             steps{
@@ -52,9 +52,9 @@ agent any
                 sh 'mkdir .aws'
                 sh 'aws configure set aws_access_key_id $AWSKEY'
                 sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
-                sh 'aws configure set region eu-west-3'
+                sh 'aws configure set region $AWSREGION'
                 sh 'aws configure set output text'                
-                sh 'aws eks --region eu-west-3 update-kubeconfig --name $EKSCLUSTERNAME --kubeconfig .kube/config'
+                sh 'aws eks --region $AWSREGION update-kubeconfig --name $EKSCLUSTERNAME --kubeconfig .kube/config'
                 sh 'aws eks list-clusters'
                 sh 'kubectl config view'
                 sh 'kubectl cluster-info --kubeconfig .kube/config'
