@@ -58,7 +58,7 @@ agent any
                 sh 'aws eks list-clusters'
                 sh 'kubectl config view'
                 sh 'kubectl cluster-info --kubeconfig .kube/config'
-                sh 'kubectl apply -f ./manifests -n $NAMESPACE'
+                sh 'kubectl apply -f ./manifests -n $NAMESPACE --kubeconfig .kube/config'
                 }
             
 
